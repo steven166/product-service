@@ -16,7 +16,7 @@ public class ProductServiceApplication {
 	@RestController
 	public class TraceController{
 
-		@RequestMapping(method = RequestMethod.GET, path = "/api/v1/trace")
+		@RequestMapping(method = RequestMethod.GET, path = "/api/v1/products/trace")
 		public String trace(){
 			return "product-service: 1.0";
 		}
