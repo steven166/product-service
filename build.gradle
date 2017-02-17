@@ -29,6 +29,12 @@ repositories {
 	maven {
 		url "${nexusUrl}"
 	}
+	maven {
+		url "http://nexus-cicd.192.168.252.210.xip.io/content/repositories/spring-milestone/"
+	}
+	maven {
+		url "http://nexus-cicd.192.168.252.210.xip.io/content/repositories/spring-snapshot/"
+	}
 //	mavenCentral()
 //	maven { url "https://repo.spring.io/snapshot" }
 //	maven { url "https://repo.spring.io/milestone" }
