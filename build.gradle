@@ -4,7 +4,12 @@ buildscript {
 	}
 	repositories {
 		maven {
-			url "http://nexus-cicd.192.168.252.210.xip.io/content/repositories/central/"
+			url ${nexusUrl}
+		}
+		maven {
+			id "org.springframework.maven.milestone"
+			name "Maven Central Compatible Spring Milestone Repository"
+			url ${nexusUrl}
 		}
 	}
 	dependencies {
