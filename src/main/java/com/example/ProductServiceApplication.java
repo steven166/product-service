@@ -18,7 +18,7 @@ public class ProductServiceApplication {
 
 		@RequestMapping(method = RequestMethod.GET, path = "/api/v1/products/trace")
 		public String trace(){
-			return "product-service: 1.0";
+			return "product-service: 2.0";
 		}
 
 	}
