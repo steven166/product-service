@@ -4,12 +4,12 @@ buildscript {
 	}
 	repositories {
 		maven {
-			url ${nexusUrl}
+			url "${nexusUrl}"
 		}
 		maven {
-			id "org.springframework.maven.milestone"
+//			id "org.springframework.maven.milestone"
 			name "Maven Central Compatible Spring Milestone Repository"
-			url ${nexusUrl}
+			url "${nexusUrl}"
 		}
 	}
 	dependencies {
