@@ -1,0 +1,15 @@
+FROM maxxton/maxxton-services-openshift-dev
+
+# Setup tools
+ADD gradlew ./
+ADD gradle/ ./gradle/
+RUN bash ./gradlew
+
+# Download dependencies
+ADD build.gradle gradle.properties settings.gradle ./
+ADD src/main/build-config/build-commons.gradle ./src/main/build-config/
+RUN bash gradlew build -x test
+
+# Build artifact
+ADD src ./src
+RUN bash gradlew build -x test
