@@ -1,0 +1,75 @@
+
+apply plugin: "java"
+apply plugin: "application"
+apply plugin: "eclipse"
+apply plugin: "idea"
+apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
+apply plugin: "microdocs"
+apply plugin: 'com.github.ben-manes.versions'
+
+apply plugin: "groovy"
+apply plugin: "maven"
+apply plugin: "maven-publish"
+apply plugin: "nebula.nebula-release"
+apply plugin: "nebula.dependency-lock"
+apply plugin: "jacoco"
+
+jar {
+  baseName = "app"
+  version = ""
+}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+group = "${application_name}"
+springBoot {
+  mainClass = "${main_class}"
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      groupId "com.maxxton.microservices"
+      artifactId "${application_name}"
+      from components.java
+    }
+  }
+  repositories {
+    maven {
+      credentials {
+        username "microservices"
+        password "M1cr053rv1c35!"
+      }
+      if ( project.version.toString().endsWith("-SNAPSHOT") ) {
+        url "https://maven.maxxton.com/repository/snapshots"
+      } else {
+        url "https://maven.maxxton.com/repository/internal"
+      }
+    }
+  }
+}
+
+eclipse {
+  classpath {
+    containers.remove("org.eclipse.jdt.launching.JRE_CONTAINER")
+    containers "org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"
+  }
+}
+
+jacoco {
+  toolVersion = "${jacoco_version}"
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = "${gradle_version}"
+}
+
+buildMicroDocs {
+  options.addStringOption("group", 'services');
+}
+
+checkMicroDocs {
+  env = 'development'
+  url = "https://microdocs.maxxton.com";
+}
+

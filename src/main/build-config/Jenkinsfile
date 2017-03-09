@@ -1,0 +1,54 @@
+@Library("PipelineLibrary") _
+def config = null
+
+pipeline{
+  agent {
+    label 'maven'
+  }
+  triggers {
+    pollSCM('* * * * *')
+  }
+  stages{
+    stage('Checkout') {
+      steps{
+        script{
+          config = loadRepo()
+        }
+      }
+    }
+    stage('Build') {
+      steps {
+        gradleBuild()
+      }
+    }
+    stage('Build Docker Image') {
+      steps {
+        parallel 'Build Docker Image': {
+          ocBuildImage(config.name)
+        }, 'Test and Report': {
+          gradleTestAndReport()
+        }
+      }
+    }
+    stage('Publish develop') {
+      steps {
+        parallel 'Promote Image': {
+          ocPromoteImage(config.name, 'snapshot', 'dev')
+        }, 'Publish reports': {
+          publishReports()
+        }
+      }
+    }
+    stage('Prepare Deployment') {
+      steps {
+        ocCreateDeployment(config.name, 'dev')
+      }
+    }
+
+    stage('Deploy develop') {
+      steps {
+        ocDeploy(config.name)
+      }
+    }
+  }
+}
