@@ -1,0 +1,45 @@
+@Library("PipelineLibrary") _
+
+pipeline{
+  agent {
+    label 'maven'
+  }
+  triggers {
+    pollSCM('* * * * *')
+  }
+  stages{
+    stage('Checkout') {
+      steps{
+        script{
+          sshagent([cloneCredentials]) {
+
+          }
+          checkout scm
+
+          stash includes: '**', name: 'sources'
+        }
+      }
+    }
+    stage('Build and Test') {
+      steps {
+        script{
+          unstash name: 'sources'
+          sh 'chmod 777 ./gradlew'
+          sh "./gradlew build test"
+          stash includes: 'build/libs/**', name: 'jar'
+        }
+      }
+      post{
+        always {
+          unstash name: 'reports'
+          junit allowEmptyResults: true, testResults: 'build/test-results/*.xml'
+        }
+      }
+    }
+  }
+  post{
+    always{
+      bitbucketStatusNotify()
+    }
+  }
+}
